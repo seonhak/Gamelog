@@ -1,4 +1,4 @@
-package java.com.best11.gamelog.controller;
+package com.best11.gamelog.controller;
 
 public class UserController {
 }
