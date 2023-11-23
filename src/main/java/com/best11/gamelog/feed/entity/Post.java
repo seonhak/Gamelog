@@ -1,6 +1,5 @@
 package com.best11.gamelog.feed.entity;
 
-import com.best11.gamelog.feed.dto.FeedRequestDto;
 import com.best11.gamelog.feed.dto.PostRequestDto;
 import com.best11.gamelog.feed.dto.PostResponseDto;
 import jakarta.persistence.*;
@@ -11,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "feeds")
 @NoArgsConstructor
-public class Feed extends Timestamped {
+public class Post extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +25,7 @@ public class Feed extends Timestamped {
     @Column
     private String content;
 
-    public Feed(PostResponseDto responseDto) {
+    public Post(PostResponseDto responseDto) {
         this.title = responseDto.getTitle();
         this.author = responseDto.getAuthor();
         this.content = responseDto.getContent();
