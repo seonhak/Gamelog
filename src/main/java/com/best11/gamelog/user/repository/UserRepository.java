@@ -1,6 +1,6 @@
-package com.best11.gamelog.repository;
+package com.best11.gamelog.user.repository;
 
-import com.best11.gamelog.entity.User;
+import com.best11.gamelog.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

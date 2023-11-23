@@ -1,4 +1,4 @@
-package com.best11.gamelog.dto;
+package com.best11.gamelog.user.dto;
 
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

@@ -1,11 +1,13 @@
-package com.best11.gamelog.service;
+package com.best11.gamelog.user.service;
 
-import com.best11.gamelog.dto.SignupRequestDto;
-import com.best11.gamelog.entity.User;
-import com.best11.gamelog.repository.UserRepository;
+//import com.best11.gamelog.user.dto.DescriptionRequestDto;
+import com.best11.gamelog.user.dto.SignupRequestDto;
+import com.best11.gamelog.user.entity.User;
+import com.best11.gamelog.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,4 +42,8 @@ public class UserService {
         User user = new User(userId, password, username, description);
         userRepository.save(user);
     }
+//    @Transactional
+//    public void updateDescription(DescriptionRequestDto requestDto, User user) {
+//        user.update(requestDto);
+//    }
 }

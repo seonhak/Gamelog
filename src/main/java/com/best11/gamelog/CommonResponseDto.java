@@ -1,4 +1,4 @@
-package com.best11.gamelog.dto;
+package com.best11.gamelog;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
