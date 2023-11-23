@@ -1,7 +1,8 @@
-package feed.entity;
+package com.best11.gamelog.feed.entity;
 
-import feed.dto.FeedRequestDto;
-import feed.dto.FeedResponseDto;
+import com.best11.gamelog.feed.dto.FeedRequestDto;
+import com.best11.gamelog.feed.dto.PostRequestDto;
+import com.best11.gamelog.feed.dto.PostResponseDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,15 +26,15 @@ public class Feed extends Timestamped {
     @Column
     private String content;
 
-    public Feed(FeedRequestDto requestDto) {
-        this.title = requestDto.getTitle();
-        this.author = requestDto.getAuthor();
-        this.content = requestDto.getContent();
-    }
-
-    public Feed(FeedResponseDto responseDto) {
+    public Feed(PostResponseDto responseDto) {
         this.title = responseDto.getTitle();
         this.author = responseDto.getAuthor();
         this.content = responseDto.getContent();
+    }
+
+    public void update(PostRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.author = requestDto.getAuthor();
+        this.content = requestDto.getContent();
     }
 }
