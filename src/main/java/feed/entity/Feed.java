@@ -14,7 +14,7 @@ public class Feed extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long p_id;
+    private Long id;
 
     @Column
     private String title;
