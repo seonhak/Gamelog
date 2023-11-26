@@ -2,11 +2,12 @@ package com.best11.gamelog.user.security;
 
 import java.util.Collection;
 
-import com.best11.gamelog.user.entity.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import lombok.Getter;
+import com.best11.gamelog.user.entity.User;
+
 
 public class UserDetailsImpl implements UserDetails {
 
@@ -29,7 +30,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUserId();
+        return user.getUsername();
     }
 
     @Override
@@ -51,4 +52,5 @@ public class UserDetailsImpl implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
+
 }

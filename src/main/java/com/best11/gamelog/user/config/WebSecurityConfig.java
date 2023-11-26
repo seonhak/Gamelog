@@ -1,7 +1,8 @@
-package com.best11.gamelog.config;
+package com.best11.gamelog.user.config;
 
-import com.best11.gamelog.jwt.JwtAuthorizationFilter;
+import com.best11.gamelog.user.jwt.JwtAuthorizationFilter;
 import com.best11.gamelog.user.security.UserDetailsService;
+import com.best11.gamelog.user.jwt.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -22,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    private final com.best11.gamelog.jwt.JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     private final UserDetailsService userDetailsService;
 
@@ -56,6 +57,8 @@ public class WebSecurityConfig {
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
                         .requestMatchers("/api/user/**").permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
+                        .requestMatchers("/api/feed/post/**").permitAll()
+                        .requestMatchers("/api/feed/posts").permitAll()
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 

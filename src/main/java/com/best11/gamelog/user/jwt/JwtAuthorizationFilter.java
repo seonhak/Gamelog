@@ -1,9 +1,18 @@
-package com.best11.gamelog.jwt;
+package com.best11.gamelog.user.jwt;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.Objects;
 
-import com.best11.gamelog.CommonResponseDto;
-import com.best11.gamelog.user.security.UserDetailsImpl;
-import com.best11.gamelog.user.security.UserDetailsService;
+import jakarta.servlet.http.Cookie;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.OncePerRequestFilter;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -12,15 +21,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-import java.util.Objects;
+import com.best11.gamelog.user.security.UserDetailsService;
+import com.best11.gamelog.user.security.UserDetailsImpl;
+import com.best11.gamelog.CommonResponseDto;
 
 @Slf4j(topic = "JWT 검증 및 인가")
 @RequiredArgsConstructor
@@ -32,20 +36,24 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String token = jwtUtil.resolveToken(request); // Bearer 떼기
 
-        if(Objects.nonNull(token)) { // Null 이 아니면
-            if(jwtUtil.validateToken(token)) { // 검증
+        String token = jwtUtil.getTokenFromRequest(request);
+
+        if(Objects.nonNull(token)) {
+            if(jwtUtil.validateToken(token)) {
                 Claims info = jwtUtil.getUserInfoFromToken(token);
 
-                /*  https://teamsparta.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.
-                    com%2Fa5154fec-66b1-4e27-838b-77218f812d83%2FUntitled.png?table=block&id=6821de8e-fcc4-402b-a1d2-c87b
-                    eb445300&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&width=970&userId=&cache=v2 참고 */
-                String userId = info.getSubject();
+                // 인증정보에 유저정보(username) 넣기
+                // username -> user 조회
+                String username = info.getSubject();
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
-                UserDetailsImpl userDetails = userDetailsService.getUserDetails(userId);
+                // -> userDetails 에 담고
+                UserDetailsImpl userDetails = userDetailsService.getUserDetails(username);
+                // -> authentication의 principal 에 담고
                 Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                // -> securityContent 에 담고
                 context.setAuthentication(authentication);
+                // -> SecurityContextHolder 에 담고
                 SecurityContextHolder.setContext(context);
                 // -> 이제 @AuthenticationPrincipal 로 조회할 수 있음
             } else {
@@ -58,6 +66,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             }
         }
 
-        filterChain.doFilter(request, response); // 다음 필터로 이동(?)
+        filterChain.doFilter(request, response);
     }
 }

@@ -1,11 +1,13 @@
 package com.best11.gamelog.user.security;
 
 
-import com.best11.gamelog.user.entity.User;
-import com.best11.gamelog.user.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import com.best11.gamelog.user.security.UserDetailsImpl;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import com.best11.gamelog.user.entity.User;
+import com.best11.gamelog.user.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

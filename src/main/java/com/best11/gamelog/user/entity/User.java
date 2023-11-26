@@ -6,9 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @Setter
 @Entity
@@ -32,11 +29,13 @@ public class User extends Timestamped {
     @Column(nullable = false)
     private String description;
 
-    public User(String userId, String password, String username, String description) {
 
+    public User(String userId, String password, String username, String description) {
         this.userId = userId;
         this.password = password;
         this.username = username;
         this.description = description;
     }
+
+
 }

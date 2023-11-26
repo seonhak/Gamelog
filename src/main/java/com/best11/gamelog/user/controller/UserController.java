@@ -1,8 +1,14 @@
 package com.best11.gamelog.user.controller;
 
 import com.best11.gamelog.CommonResponseDto;
-import com.best11.gamelog.jwt.JwtUtil;
+import com.best11.gamelog.user.dto.PasswordRequestDto;
+import com.best11.gamelog.user.dto.SignupRequestDto;
+import com.best11.gamelog.user.dto.UserRequestDto;
+import com.best11.gamelog.feed.dto.PostResponseDto;
+import com.best11.gamelog.feed.dto.PostUpdateRequestDto;
 import com.best11.gamelog.user.dto.*;
+import com.best11.gamelog.user.entity.User;
+import com.best11.gamelog.user.jwt.JwtUtil;
 import com.best11.gamelog.user.security.UserDetailsImpl;
 import com.best11.gamelog.user.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,6 +23,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
 
 @Slf4j
 @RestController
@@ -59,15 +66,24 @@ public class UserController {
             return ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
         }
 
-        response.setHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(loginRequestDto.getUserId()));
+        jwtUtil.addJwtToCookie(jwtUtil.createToken(loginRequestDto.getUserId()), response);
 
 
         return ResponseEntity.ok().body(new CommonResponseDto("로그인 성공", HttpStatus.OK.value()));
     }
 
+    // 이름 변경
+    @PatchMapping("/username")
+    public ResponseEntity<CommonResponseDto> updateUsername(@RequestBody UserRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        userService.updateUsername(requestDto, userDetails.getUser());
+
+        return ResponseEntity.status(HttpStatus.OK.value()).body(new CommonResponseDto("이름 변경이 완료되었습니다.", HttpStatus.OK.value()));
+    }
+
     // 한 줄 소개 변경
-    @PutMapping("/description")
-    public ResponseEntity<CommonResponseDto> updateDescription(@RequestBody DescriptionRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    @PatchMapping("/description")
+    public ResponseEntity<CommonResponseDto> updateDescription(@RequestBody UserRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         userService.updateDescription(requestDto, userDetails.getUser());
 
@@ -75,7 +91,7 @@ public class UserController {
     }
 
     // 비밀번호 변경
-    @PutMapping("/password")
+    @PatchMapping("/password")
     public ResponseEntity<CommonResponseDto> updatePassword(@RequestBody PasswordRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.updatePassword(requestDto, userDetails.getUser());
 
@@ -83,7 +99,12 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ProfileResponseDto getProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return userService.getProfile(userDetails.getUser());
+    public ResponseEntity<UserProfileDto> getUserProfile(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        User user = userDetails.getUser();
+        UserProfileDto responseDto = userService.getProfile(user);
+        responseDto.setPosts(userService.getPosts(user));
+        return ResponseEntity.ok(responseDto);
     }
 }
