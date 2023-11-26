@@ -2,9 +2,11 @@ package com.best11.gamelog.feed.entity;
 
 import com.best11.gamelog.feed.dto.PostRequestDto;
 import com.best11.gamelog.feed.dto.PostResponseDto;
+import com.best11.gamelog.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Entity
@@ -25,10 +27,15 @@ public class Post extends Timestamped {
     @Column
     private String content;
 
-    public Post(PostResponseDto responseDto) {
-        this.title = responseDto.getTitle();
-        this.author = responseDto.getAuthor();
-        this.content = responseDto.getContent();
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public Post(PostRequestDto resquestDto) {
+        this.title = resquestDto.getTitle();
+        this.author = resquestDto.getAuthor();
+        this.content = resquestDto.getContent();
     }
 
     public void update(PostRequestDto requestDto) {

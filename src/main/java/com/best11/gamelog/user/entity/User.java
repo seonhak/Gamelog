@@ -1,4 +1,4 @@
-package com.best11.gamelog.entity;
+package com.best11.gamelog.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -26,10 +26,13 @@ public class User {
     @Column(nullable = false)
     private String description;
 
+
     public User(String userId, String password, String username, String description) {
         this.userId = userId;
         this.password = password;
         this.username = username;
         this.description = description;
     }
+
+
 }

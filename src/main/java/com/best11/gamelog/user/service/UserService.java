@@ -1,8 +1,11 @@
-package com.best11.gamelog.service;
+package com.best11.gamelog.user.service;
 
-import com.best11.gamelog.dto.SignupRequestDto;
-import com.best11.gamelog.entity.User;
-import com.best11.gamelog.repository.UserRepository;
+import com.best11.gamelog.user.dto.SignupRequestDto;
+import com.best11.gamelog.user.dto.UserRequestDto;
+import com.best11.gamelog.user.entity.User;
+import com.best11.gamelog.user.jwt.JwtUtil;
+import com.best11.gamelog.user.repository.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+
 
     public void signup(SignupRequestDto requestDto) {
         String userId = requestDto.getUserId();
@@ -39,5 +44,17 @@ public class UserService {
         //사용자 등록
         User user = new User(userId, password, username, description);
         userRepository.save(user);
+    }
+
+    public void login(UserRequestDto loginRequestDto) {
+        String userId = loginRequestDto.getUserId();
+        String password = loginRequestDto.getPassword();
+        // userId 검색
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("등록된 유저가 없습니다."));
+        // 비밀번호 확인
+        if(!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
     }
 }
