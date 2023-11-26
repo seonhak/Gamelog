@@ -1,6 +1,5 @@
 package com.best11.gamelog.feed.dto;
 
-import com.best11.gamelog.feed.entity.Timestamped;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

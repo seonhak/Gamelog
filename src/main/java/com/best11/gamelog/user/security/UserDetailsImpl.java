@@ -1,4 +1,4 @@
-package com.best11.gamelog.user;
+package com.best11.gamelog.user.security;
 
 import java.util.Collection;
 
