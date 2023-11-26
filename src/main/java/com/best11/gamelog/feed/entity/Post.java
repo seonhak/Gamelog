@@ -33,9 +33,9 @@ public class Post extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Post(PostRequestDto resquestDto) {
+    public Post(PostRequestDto resquestDto, String author) {
         this.title = resquestDto.getTitle();
-        this.author = resquestDto.getAuthor();
+        this.author = author;
         this.content = resquestDto.getContent();
     }
 
