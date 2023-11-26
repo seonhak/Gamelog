@@ -63,8 +63,7 @@ public class UserController {
             return ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
         }
 
-        response.setHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(loginRequestDto.getUserId()));
-
+        jwtUtil.addJwtToCookie(jwtUtil.createToken(loginRequestDto.getUserId()), response);
 
         return ResponseEntity.ok().body(new CommonResponseDto("로그인 성공", HttpStatus.OK.value()));
     }
@@ -78,5 +77,4 @@ public class UserController {
         responseDto.setPosts(userService.getPosts(user));
         return ResponseEntity.ok(responseDto);
     }
-
 }
