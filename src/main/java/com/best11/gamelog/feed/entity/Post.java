@@ -1,7 +1,7 @@
 package com.best11.gamelog.feed.entity;
 
+import com.best11.gamelog.Timestamped;
 import com.best11.gamelog.feed.dto.PostRequestDto;
-import com.best11.gamelog.feed.dto.PostResponseDto;
 import com.best11.gamelog.feed.dto.PostUpdateRequestDto;
 import com.best11.gamelog.user.entity.User;
 import jakarta.persistence.*;

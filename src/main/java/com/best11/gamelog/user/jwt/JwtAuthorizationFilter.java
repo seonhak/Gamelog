@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.best11.gamelog.user.security.UserDetailsService;
 import com.best11.gamelog.user.security.UserDetailsImpl;
-import com.best11.gamelog.user.dto.CommonResponseDto;
+import com.best11.gamelog.CommonResponseDto;
 
 @Slf4j(topic = "JWT 검증 및 인가")
 @RequiredArgsConstructor
