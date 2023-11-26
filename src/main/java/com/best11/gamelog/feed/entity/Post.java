@@ -2,6 +2,7 @@ package com.best11.gamelog.feed.entity;
 
 import com.best11.gamelog.feed.dto.PostRequestDto;
 import com.best11.gamelog.feed.dto.PostResponseDto;
+import com.best11.gamelog.feed.dto.PostUpdateRequestDto;
 import com.best11.gamelog.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -38,9 +39,8 @@ public class Post extends Timestamped {
         this.content = resquestDto.getContent();
     }
 
-    public void update(PostRequestDto requestDto) {
+    public void update(PostUpdateRequestDto requestDto) {
         this.title = requestDto.getTitle();
-        this.author = requestDto.getAuthor();
         this.content = requestDto.getContent();
     }
 }

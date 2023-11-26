@@ -2,13 +2,12 @@ package com.best11.gamelog.feed.service;
 
 import com.best11.gamelog.feed.dto.PostRequestDto;
 import com.best11.gamelog.feed.dto.PostResponseDto;
+import com.best11.gamelog.feed.dto.PostUpdateRequestDto;
 import com.best11.gamelog.feed.entity.Post;
 import com.best11.gamelog.feed.repository.FeedJpaRepository;
-import com.best11.gamelog.user.UserDetailsImpl;
 import com.best11.gamelog.user.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,7 +40,7 @@ public class PostService {
 
 
     @Transactional
-    public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user) {
+    public PostResponseDto updatePost(Long postId, PostUpdateRequestDto requestDto, User user) {
         Post postEntity = getUserPost(postId,user);
         postEntity.update(requestDto);
         return new PostResponseDto(postEntity);

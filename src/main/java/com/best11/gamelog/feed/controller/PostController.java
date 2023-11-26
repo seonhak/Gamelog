@@ -3,8 +3,9 @@ package com.best11.gamelog.feed.controller;
 
 import com.best11.gamelog.feed.dto.PostRequestDto;
 import com.best11.gamelog.feed.dto.PostResponseDto;
+import com.best11.gamelog.feed.dto.PostUpdateRequestDto;
 import com.best11.gamelog.feed.service.PostService;
-import com.best11.gamelog.user.UserDetailsImpl;
+import com.best11.gamelog.user.security.UserDetailsImpl;
 import com.best11.gamelog.user.dto.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,6 @@ public class PostController {
 
     @PostMapping("/post")
     public ResponseEntity<PostResponseDto> addPost(@RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        System.out.println("printUser" + userDetails.getUser().getUsername());
         PostResponseDto responseDto = postService.addPost(requestDto, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
@@ -42,7 +42,7 @@ public class PostController {
     @PatchMapping("/{postId}")
     public ResponseEntity<PostResponseDto> updatePost(
             @PathVariable Long postId,
-            @RequestBody PostRequestDto requestDto,
+            @RequestBody PostUpdateRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         try {
