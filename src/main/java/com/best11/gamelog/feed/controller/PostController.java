@@ -5,6 +5,7 @@ import com.best11.gamelog.feed.dto.PostRequestDto;
 import com.best11.gamelog.feed.dto.PostResponseDto;
 import com.best11.gamelog.feed.service.PostService;
 import com.best11.gamelog.user.UserDetailsImpl;
+import com.best11.gamelog.user.dto.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,17 +45,26 @@ public class PostController {
             @RequestBody PostRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        PostResponseDto responseDto = postService.updatePost(postId, requestDto, userDetails.getUser());
+        try {
+            PostResponseDto responseDto = postService.updatePost(postId, requestDto, userDetails.getUser());
+            return ResponseEntity.ok(responseDto);
+        }catch (RejectedExecutionException | IllegalArgumentException ex){
+            return ResponseEntity.badRequest().body(new PostResponseDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
 
-        return ResponseEntity.ok(responseDto);
+        }
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(
+    public ResponseEntity<CommonResponseDto> deletePost(
             @PathVariable Long postId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        postService.deletePost(postId, userDetails.getUser());
-        return ResponseEntity.noContent().build();
+        try {
+            postService.deletePost(postId, userDetails.getUser());
+            // 성공 메시지 반환
+            return ResponseEntity.status(HttpStatus.OK.value()).body(new CommonResponseDto("삭제 성공", HttpStatus.OK.value()));
+        } catch (RejectedExecutionException | IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(new CommonResponseDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        }
     }
 }
