@@ -21,7 +21,7 @@ public class PostService {
     private final FeedJpaRepository feedJpaRepository;
     public PostResponseDto addPost(PostRequestDto requestDto,User user) {
         // Dto -> Entity
-        Post postEntity = new Post(requestDto);
+        Post postEntity = new Post(requestDto, user.getUsername());
         postEntity.setUser(user);
         Post savePost = feedJpaRepository.save(postEntity);
         return new PostResponseDto(savePost);
