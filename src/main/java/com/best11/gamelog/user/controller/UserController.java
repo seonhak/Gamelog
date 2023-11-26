@@ -4,6 +4,10 @@ import com.best11.gamelog.CommonResponseDto;
 import com.best11.gamelog.user.dto.PasswordRequestDto;
 import com.best11.gamelog.user.dto.SignupRequestDto;
 import com.best11.gamelog.user.dto.UserRequestDto;
+import com.best11.gamelog.feed.dto.PostResponseDto;
+import com.best11.gamelog.feed.dto.PostUpdateRequestDto;
+import com.best11.gamelog.user.dto.*;
+import com.best11.gamelog.user.entity.User;
 import com.best11.gamelog.user.jwt.JwtUtil;
 import com.best11.gamelog.user.security.UserDetailsImpl;
 import com.best11.gamelog.user.service.UserService;
@@ -19,6 +23,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
 
 @Slf4j
 @RestController
@@ -54,15 +59,14 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<CommonResponseDto> login(@RequestBody UserRequestDto loginRequestDto, HttpServletResponse response) {
+    public ResponseEntity<CommonResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         try {
             userService.login(loginRequestDto);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
         }
 
-        response.setHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(loginRequestDto.getUserId()));
-
+        jwtUtil.addJwtToCookie(jwtUtil.createToken(loginRequestDto.getUserId()), response);
 
 
         return ResponseEntity.ok().body(new CommonResponseDto("로그인 성공", HttpStatus.OK.value()));
@@ -92,5 +96,15 @@ public class UserController {
         userService.updatePassword(requestDto, userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(new CommonResponseDto("비밀번호 변경이 완료되었습니다.", HttpStatus.OK.value()));
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<UserProfileDto> getUserProfile(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        User user = userDetails.getUser();
+        UserProfileDto responseDto = userService.getProfile(user);
+        responseDto.setPosts(userService.getPosts(user));
+        return ResponseEntity.ok(responseDto);
     }
 }

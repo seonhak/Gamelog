@@ -1,5 +1,5 @@
 package com.best11.gamelog.user.service;
-
+import com.best11.gamelog.feed.repository.FeedJpaRepository;
 import com.best11.gamelog.feed.dto.PostResponseDto;
 import com.best11.gamelog.feed.entity.Post;
 import com.best11.gamelog.user.dto.*;
@@ -12,6 +12,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.stream.Collectors;
+
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -19,6 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final FeedJpaRepository feedJpaRepository;
 
 
     public void signup(SignupRequestDto requestDto) {
@@ -48,7 +54,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void login(UserRequestDto loginRequestDto) {
+    public void login(LoginRequestDto loginRequestDto) {
         String userId = loginRequestDto.getUserId();
         String password = loginRequestDto.getPassword();
         // userId 검색
@@ -58,6 +64,16 @@ public class UserService {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
+    }
+
+    public UserProfileDto getProfile(User user) {
+        return new UserProfileDto(user);
+    }
+
+    public List<PostResponseDto> getPosts(User user){
+        return feedJpaRepository.findAllByUser_id(user.getId()).stream()
+                .map(PostResponseDto::new)
+               .collect(Collectors.toList());
     }
 
     public void updateUsername(UserRequestDto requestDto, User user) {
