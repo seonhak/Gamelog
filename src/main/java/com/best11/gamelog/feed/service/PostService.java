@@ -38,6 +38,8 @@ public class PostService {
                 .map(PostResponseDto::new)
                 .collect(Collectors.toList());
     }
+
+
     @Transactional
     public PostResponseDto updatePost(Long postId, PostRequestDto requestDto, User user) {
         Post postEntity = getUserPost(postId,user);
