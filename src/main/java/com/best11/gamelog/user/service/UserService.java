@@ -1,5 +1,7 @@
 package com.best11.gamelog.user.service;
 
+import com.best11.gamelog.feed.dto.PostResponseDto;
+import com.best11.gamelog.feed.entity.Post;
 import com.best11.gamelog.user.dto.SignupRequestDto;
 import com.best11.gamelog.user.dto.UserRequestDto;
 import com.best11.gamelog.user.entity.User;

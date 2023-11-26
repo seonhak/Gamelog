@@ -6,7 +6,7 @@ import com.best11.gamelog.feed.dto.PostResponseDto;
 import com.best11.gamelog.feed.dto.PostUpdateRequestDto;
 import com.best11.gamelog.feed.service.PostService;
 import com.best11.gamelog.user.security.UserDetailsImpl;
-import com.best11.gamelog.user.dto.CommonResponseDto;
+import com.best11.gamelog.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.best11.gamelog.feed.entity;
+package com.best11.gamelog;
 
 import jakarta.persistence.*;
 import lombok.Getter;

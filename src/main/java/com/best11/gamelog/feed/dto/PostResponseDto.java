@@ -1,8 +1,7 @@
 package com.best11.gamelog.feed.dto;
 
 import com.best11.gamelog.feed.entity.Post;
-import com.best11.gamelog.feed.entity.Timestamped;
-import com.best11.gamelog.user.dto.CommonResponseDto;
+import com.best11.gamelog.CommonResponseDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

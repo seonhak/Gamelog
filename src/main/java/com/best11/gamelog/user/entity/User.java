@@ -1,5 +1,6 @@
 package com.best11.gamelog.user.entity;
 
+import com.best11.gamelog.Timestamped;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Table(name = "users")
-public class User {
+public class User extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +34,4 @@ public class User {
         this.username = username;
         this.description = description;
     }
-
-
 }
