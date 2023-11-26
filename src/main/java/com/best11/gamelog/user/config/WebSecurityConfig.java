@@ -1,7 +1,8 @@
-package com.best11.gamelog.config;
+package com.best11.gamelog.user.config;
 
-import com.best11.gamelog.jwt.JwtAuthorizationFilter;
-import com.best11.gamelog.user.security.UserDetailsService;
+import com.best11.gamelog.user.jwt.JwtAuthorizationFilter;
+import com.best11.gamelog.user.UserDetailsService;
+import com.best11.gamelog.user.jwt.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -22,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    private final com.best11.gamelog.jwt.JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     private final UserDetailsService userDetailsService;
 
