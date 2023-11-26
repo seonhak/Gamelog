@@ -1,13 +1,10 @@
 package com.best11.gamelog.user.entity;
 
-import com.best11.gamelog.Timestamped;
+import com.best11.gamelog.feed.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
