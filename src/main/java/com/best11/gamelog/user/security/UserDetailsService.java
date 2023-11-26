@@ -1,0 +1,22 @@
+package com.best11.gamelog.user.security;
+
+
+import com.best11.gamelog.user.entity.User;
+import com.best11.gamelog.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class UserDetailsService {
+
+    private final UserRepository userRepository;
+
+    public UserDetailsImpl getUserDetails(String userId) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("Not Found" + userId));
+        return new UserDetailsImpl(user);
+    }
+
+}

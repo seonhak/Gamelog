@@ -1,9 +1,11 @@
 package com.best11.gamelog.user.controller;
 
-import com.best11.gamelog.user.service.UserService;
 import com.best11.gamelog.CommonResponseDto;
-//import com.best11.gamelog.user.dto.DescriptionRequestDto;
-import com.best11.gamelog.user.dto.SignupRequestDto;
+import com.best11.gamelog.jwt.JwtUtil;
+import com.best11.gamelog.user.dto.*;
+import com.best11.gamelog.user.security.UserDetailsImpl;
+import com.best11.gamelog.user.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +25,9 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
+    // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<CommonResponseDto> signup(@Valid @RequestBody SignupRequestDto signupRequestDto, BindingResult bindingResult) {
         // Validation 예외 처리
@@ -40,16 +44,46 @@ public class UserController {
         }
         // 실패 메시지 반환
         catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new CommonResponseDto(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST.value()));
+            return ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
         }
         // 성공 메시지 반환
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(new CommonResponseDto("회원가입 성공", HttpStatus.CREATED.value()));
     }
 
-//    @PutMapping("/description")
-//    public ResponseEntity<CommonResponseDto> updateDescription(DescriptionRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        userService.updateDescription(requestDto, userDetails.getUser());
-//
-//        return ResponseEntity.status(HttpStatus.OK.value()).body(new CommonResponseDto("변경이 완료되었습니다.", HttpStatus.OK.value()));
-//    }
+    // 로그인
+    @PostMapping("/login")
+    public ResponseEntity<CommonResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+        try {
+            userService.login(loginRequestDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        }
+
+        response.setHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(loginRequestDto.getUserId()));
+
+
+        return ResponseEntity.ok().body(new CommonResponseDto("로그인 성공", HttpStatus.OK.value()));
+    }
+
+    // 한 줄 소개 변경
+    @PutMapping("/description")
+    public ResponseEntity<CommonResponseDto> updateDescription(@RequestBody DescriptionRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        userService.updateDescription(requestDto, userDetails.getUser());
+
+        return ResponseEntity.status(HttpStatus.OK.value()).body(new CommonResponseDto("한 줄 소개 변경이 완료되었습니다.", HttpStatus.OK.value()));
+    }
+
+    // 비밀번호 변경
+    @PutMapping("/password")
+    public ResponseEntity<CommonResponseDto> updatePassword(@RequestBody PasswordRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.updatePassword(requestDto, userDetails.getUser());
+
+        return ResponseEntity.status(HttpStatus.OK.value()).body(new CommonResponseDto("비밀번호 변경이 완료되었습니다.", HttpStatus.OK.value()));
+    }
+
+    @GetMapping("/profile")
+    public ProfileResponseDto getProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return userService.getProfile(userDetails.getUser());
+    }
 }

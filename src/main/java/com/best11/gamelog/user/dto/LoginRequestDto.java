@@ -5,6 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DescriptionRequestDto {
-    private String description;
+public class LoginRequestDto {
+    private String userId;
+    private String password;
 }

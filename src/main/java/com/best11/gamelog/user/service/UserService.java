@@ -1,7 +1,6 @@
 package com.best11.gamelog.user.service;
 
-//import com.best11.gamelog.user.dto.DescriptionRequestDto;
-import com.best11.gamelog.user.dto.SignupRequestDto;
+import com.best11.gamelog.user.dto.*;
 import com.best11.gamelog.user.entity.User;
 import com.best11.gamelog.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,7 @@ public class UserService {
     public void signup(SignupRequestDto requestDto) {
         String userId = requestDto.getUserId();
         String username = requestDto.getUsername();
-        String password = passwordEncoder.encode(requestDto.getPassword());
+        String password = passwordEncoder.encode(requestDto.getPassword()); // 비밀번호 암호화
         String passwordCheck = requestDto.getPasswordCheck();
         String description = requestDto.getDescription();
 
@@ -30,7 +29,7 @@ public class UserService {
 
         // 비밀번호 확인 일치 체크
         if(!passwordEncoder.matches(passwordCheck, password)){
-            throw new RuntimeException("비밀번호를 체크해주세요");
+            throw new IllegalArgumentException("비밀번호를 체크해주세요");
         }
 
         // username 중복 체크
@@ -42,8 +41,45 @@ public class UserService {
         User user = new User(userId, password, username, description);
         userRepository.save(user);
     }
-//    @Transactional
-//    public void updateDescription(DescriptionRequestDto requestDto, User user) {
-//        user.update(requestDto);
-//    }
+
+    public void login(LoginRequestDto loginRequestDto) {
+        String userId = loginRequestDto.getUserId();
+        String password = loginRequestDto.getPassword();
+        // userId 검색
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("등록된 유저가 없습니다."));
+        // 비밀번호 확인
+        if(!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    @Transactional
+    public void updateDescription(DescriptionRequestDto requestDto, User user) {
+        // 한줄 소개 변경
+        user.setDescription(requestDto.getDescription());
+        // 저장
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void updatePassword(PasswordRequestDto requestDto, User user) {
+        String changePassword = passwordEncoder.encode(requestDto.getChangePassword()); // 바꿀 비밀번호 암호화
+        // 비밀번호 변경 시 기존 비밀번호 확인
+        if (!passwordEncoder.matches(requestDto.getCurrentPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+        }
+        // 비밀번호 한번 더 입력해주세요 일치 확인
+        if (!passwordEncoder.matches(requestDto.getChangePasswordCheck(), changePassword)) {
+            throw new IllegalArgumentException("변경할 비밀번호를 체크해주세요");
+        }
+        // 변경된 비밀번호로 set
+        user.setPassword(changePassword);
+        // 저장
+        userRepository.save(user);
+    }
+
+    public ProfileResponseDto getProfile(User user) {
+        return new ProfileResponseDto(user);
+    }
 }

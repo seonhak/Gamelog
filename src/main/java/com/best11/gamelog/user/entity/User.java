@@ -1,12 +1,16 @@
 package com.best11.gamelog.user.entity;
 
 import com.best11.gamelog.Timestamped;
-//import com.best11.gamelog.user.dto.DescriptionRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @Table(name = "users")
@@ -29,14 +33,10 @@ public class User extends Timestamped {
     private String description;
 
     public User(String userId, String password, String username, String description) {
+
         this.userId = userId;
         this.password = password;
         this.username = username;
         this.description = description;
     }
-
-
-//    public void update(DescriptionRequestDto requestDto) {
-//        this.description = requestDto.getDescription();
-//    }
 }
