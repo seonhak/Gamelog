@@ -3,7 +3,6 @@ package com.best11.gamelog.user.jwt;
 import java.io.IOException;
 import java.util.Objects;
 
-import com.best11.gamelog.CommonResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,9 +19,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import com.best11.gamelog.user.UserDetailsService;
-import com.best11.gamelog.user.UserDetailsImpl;
-
+import com.best11.gamelog.user.security.UserDetailsService;
+import com.best11.gamelog.user.security.UserDetailsImpl;
+import com.best11.gamelog.CommonResponseDto;
 
 @Slf4j(topic = "JWT 검증 및 인가")
 @RequiredArgsConstructor

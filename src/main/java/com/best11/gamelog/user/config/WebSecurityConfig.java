@@ -1,7 +1,7 @@
 package com.best11.gamelog.user.config;
 
 import com.best11.gamelog.user.jwt.JwtAuthorizationFilter;
-import com.best11.gamelog.user.UserDetailsService;
+import com.best11.gamelog.user.security.UserDetailsService;
 import com.best11.gamelog.user.jwt.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
